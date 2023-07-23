@@ -35,13 +35,23 @@ dependencies {
     implementation 'commons-io:commons-io:2.6'
     implementation 'commons-fileupload:commons-fileupload:1.4'
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.json:json:20200518'
 
+    //MySQL
     implementation 'mysql:mysql-connector-java:8.0.28'
 
-    //웹 소켓, STOMP
+    //웹 소켓, STOMP, 레디스
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.webjars:stomp-websocket:2.3.4'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'it.ozimov:embedded-redis:0.7.2'
+
+    // sockjs
+    implementation 'org.webjars:sockjs-client:1.5.1'
+    // stomp
+    implementation 'org.webjars:stomp-websocket:2.3.4'
+    // gson
+    implementation 'com.google.code.gson:gson:2.9.0'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'

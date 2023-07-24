@@ -28,26 +28,7 @@ public class ChatController {
     private final ChatService chatService;
     private final UserRepository userRepository;
     private final ChatMessageRepository chatMessageRepository;
-    private final ChatRoomRepository chatRoomRepository;
 
-    @GetMapping("/rooms")
-    public List<ChatRoom> room() {
-        List<ChatRoom> chatRooms = chatRoomService.finaAllRoom();
-        chatRooms.stream().forEach(room -> room.setUserCount(chatRoomService.getUserCount(room.getRoomId())));
-        return chatRooms;
-    }
-
-    @PostMapping("/room")
-    public ChatRoom createRoom(@RequestBody ChatRoomDto chatRoomDto) {
-        ChatRoom createdRoom = chatRoomService.createChatRoom(chatRoomDto);
-        chatRoomRepository.save(createdRoom);
-        return createdRoom;
-    }
-
-    @GetMapping("/room/{roomId}")
-    public ChatRoom roomInfo(@PathVariable String roomId) {
-        return chatRoomService.findRoomById(roomId);
-    }
 
     /**
      * "/pub/chat/message"로 들어오는 메시징 처리

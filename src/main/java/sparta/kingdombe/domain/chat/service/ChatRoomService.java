@@ -67,6 +67,4 @@ public class ChatRoomService {
     public long decreaseUserCount(String roomId) {
         return Optional.ofNullable(valueOps.decrement(USER_COUNT + "_" + roomId)).filter(count -> count > 0).orElse(0L);
     }
-
-
 }

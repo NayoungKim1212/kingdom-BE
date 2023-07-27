@@ -8,18 +8,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import sparta.kingdombe.domain.job.dto.JobAllResponseDto;
-import sparta.kingdombe.domain.job.dto.JobResponseDto;
 import sparta.kingdombe.domain.job.dto.JobSearchCondition;
 import sparta.kingdombe.domain.job.dto.QJobAllResponseDto;
-import sparta.kingdombe.domain.job.entity.JobInfo;
-import sparta.kingdombe.domain.job.entity.QJobInfo;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.hasText;
-import static sparta.kingdombe.domain.job.entity.QJobInfo.*;
-import static sparta.kingdombe.domain.story.entity.QStory.story;
+import static sparta.kingdombe.domain.job.entity.QJobInfo.jobInfo;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -48,7 +43,6 @@ public class JobRepositoryCustomImpl implements JobRepositoryCustom{
                         titleLike(condition.getTitle()),
                         locationEq(condition.getLocation()),
                         salaryGoe(condition.getSalary()))
-//                        personNumGoe(condition.getRecruitpersonnum()))
                 .orderBy(jobInfo.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -60,7 +54,6 @@ public class JobRepositoryCustomImpl implements JobRepositoryCustom{
                         titleLike(condition.getTitle()),
                         locationEq(condition.getLocation()),
                         salaryGoe(condition.getSalary()))
-//                        personNumGoe(condition.getRecruitpersonnum()))
                 .fetch()
                 .size();
 
@@ -79,8 +72,4 @@ public class JobRepositoryCustomImpl implements JobRepositoryCustom{
     private BooleanExpression salaryGoe(Long salaryCond) {
         return salaryCond != null ? jobInfo.salary.goe(salaryCond) : null;
     }
-
-//    private BooleanExpression personNumGoe(String personNumCond) {
-//        return hasText(personNumCond) ? jobInfo.recruitmentPersonNum.goe(Long.valueOf(personNumCond)) : null;
-//    }
 }

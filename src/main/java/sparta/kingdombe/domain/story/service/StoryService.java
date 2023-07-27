@@ -31,7 +31,7 @@ public class StoryService {
     private final LikeRepository likeRepository;
     private final S3Service s3Service;
 
-    @Transactional(readOnly = true)
+ //   @Transactional(readOnly = true)
     public Page<StoryResponseDto> findAllStory(int page, int size) {
 
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "id"));

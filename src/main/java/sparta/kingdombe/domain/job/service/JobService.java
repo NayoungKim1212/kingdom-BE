@@ -18,7 +18,9 @@ import sparta.kingdombe.domain.job.entity.JobInfo;
 import sparta.kingdombe.domain.job.repository.JobRepository;
 import sparta.kingdombe.domain.image.S3Service;
 import sparta.kingdombe.domain.user.entity.User;
+import sparta.kingdombe.global.exception.systemException.DataNotFoundException;
 import sparta.kingdombe.global.responseDto.ApiResponse;
+import sparta.kingdombe.global.stringCode.SuccessCodeEnum;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,19 +38,19 @@ public class JobService {
     private final S3Service s3Service;
 
     @Transactional(readOnly = true)
-    public Page<JobAllResponseDto> findAllJobInfo(int page) {
+    public Page<JobAllResponseDto> findAllJobInfo(int page, int size) {
 
-        Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<JobInfo> jobInfoPage = jobRepository.findAll(pageable);
 
         List<JobAllResponseDto> jobInfoList = jobInfoPage.stream()
                 .map(JobAllResponseDto::new)
                 .collect(Collectors.toList());
 
-        int totalPage = jobInfoPage.getTotalPages();
+        long total = jobInfoPage.getTotalElements();
 
         // 해당 페이지에 들어갈 내용(리스트) , 요청한 페이지 정보 , 들어갈 내용들의 양
-        return new PageImpl<>(jobInfoList, pageable, totalPage);
+        return new PageImpl<>(jobInfoList, pageable, total);
     }
 
     public JobResponseDto findJobInfoById(Long id) {
@@ -76,7 +78,7 @@ public class JobService {
         checkUsername(id, user);
         deleteImage(jobInfo);
         jobRepository.delete(jobInfo);
-        return "삭제완료";
+        return DELETE_SUCCESS.getMessage();
     }
 
     private void deleteImage(JobInfo jobInfo) {
@@ -110,14 +112,14 @@ public class JobService {
 
     private JobInfo findJobInfo(Long id) {
         return jobRepository.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.BAD_REQUEST, "해당 채용 공고는 존재하지 않습니다.")
+                new DataNotFoundException("존재하지 않는 게시물입니다")
         );
     }
 
     private void checkUsername(Long id, User user) {
        JobInfo jobInfo = findJobInfo(id);
         if (!(jobInfo.getUser().getId().equals(user.getId())))
-            throw new IllegalArgumentException("채용공고는 작성자만 수정,삭제가 가능합니다");
+            throw new DataNotFoundException("작성자만 수정,삭제가 가능합니다");
     }
 
     public Page<JobAllResponseDto> searchJobInfo(JobSearchCondition condition, Pageable pageable) {
